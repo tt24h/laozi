@@ -151,25 +151,21 @@
 #pagebreak()
 
 /* 正文页 ::::::::::::::: */
-#for sec in _内容解析结果_ {
+#for (i, sec) in _内容解析结果_.enumerate(start: 1) {
     
   // 章标题
   [ = #sec.title ] 
 
   for (i, para) in sec.paras.enumerate(start: 1) {
-    
-    set block(sticky: true)
-    block(stroke: none, inset:0em, width: 100%,{
-      
+
+    {
       set text(font:"Noto Sans CJK SC", size: 1.2em, weight: 400);
   
       // 原文
-      [ #eval(para.ancient, mode: "markup") ] 
-      
-    })
-
-    set block(sticky: false)
-    block(stroke: gray + 0.4pt, inset: 1.2em, width: 100%, radius: 0.4em, {
+      [ #eval(para.ancient, mode: "markup") ]  
+    }
+    
+    pad(left:1.2em, y:1em,{
       
       set par(justify: true)
       
@@ -197,6 +193,6 @@
       
     })  // end ← 译文等段 
   }     // end ← 段处理
-  pagebreak()
+  if i != 81 { pagebreak() }
 }       // end ← 章处理
 #align(right, [（完）])

@@ -160,7 +160,6 @@
   v(1.2em)
 }
 
-
 #let _章平均字数_ = int(_统计结果_.总字数 / _统计结果_.章节数)
 #let _原文段平均字数_ = int(_统计结果_.原文总字数 / _统计结果_.段落数)
 #let _译文段平均字数_ = int(_统计结果_.译文总字数 / _统计结果_.段落数)
@@ -183,7 +182,26 @@
 )
 #v(2em)
 
-= 字频统计（出现次数排序）
+= 原文字频统计（出现次数≤5，从少开始）
+#v(1em)
+
+#let _5次以内排序后结果_ = {
+  _统计结果_.未排序字频结果.sorted(key: x => x.出现次数)
+    .filter(x => x.出现次数 <= 5)
+}
+
+#table(
+  align: horizon + center,
+  stroke: none,
+  columns:23,
+  .._5次以内排序后结果_.map(x => x.字),
+  [🥕]
+)
+
+= 原文字频统计（出现次数排序）
+
+原文共含 #_统计结果_.未排序字频结果.len() 个不重复字符。
+#v(1em)
 #columns(2, gutter: 2em, )[
 
   #let _排序后结果_ = _统计结果_.未排序字频结果.sorted(key: x => x.出现次数).rev()
@@ -199,7 +217,7 @@
       #align(center)[#char_info.字]
     ]
     h(3em)
-    [#char_info.出现次数]
+    box(width: 3em)[#align(right, str(char_info.出现次数))]
     
     linebreak()
   }
@@ -208,7 +226,7 @@
 
 #pagebreak()
 
-= 字频统计（Unicode 排序）
+= 原文字频统计（Unicode 排序）
 #columns(2, gutter: 2em, )[
 
   #let _排序后结果_ = _统计结果_.未排序字频结果.sorted(key: x => x.unicode)
@@ -224,7 +242,7 @@
       #align(center)[#char_info.字]
     ]
     h(3em)
-    [#char_info.出现次数]
+    box(width: 3em)[#align(right, str(char_info.出现次数))]
     
     linebreak()
   }
