@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>从「数据.txt」生成Markdown版</title>
+    <style>
+        body { margin: 0; padding: 40px 0; font-family: sans-serif; background-color: #fcfcfc; }
+        .container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
+        .item { width: 80%; max-width: 800px; box-sizing: border-box; }
+        textarea { height: 250px; padding: 15px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; resize: vertical; transition: border-color 0.3s; }
+        textarea:focus { border-color: #4a90e2; outline: none; }
+        #targetText { background-color: #f9f9f9; color: #333; }
+        .hint { color: #555; font-size: 14px; padding: 8px 25px; background-color: #ffffff; border: 1px solid #ccc; border-radius: 50px; margin-bottom: 0px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="hint">💡 全选 `数据.txt` 中的内容，粘贴至下方文本框，将自动实时显示Markdown文本。</div>
+        <textarea id="sourceText" class="item" placeholder="将`数据.txt`的内容粘贴至此."></textarea>
+        <textarea id="targetText" class="item" placeholder="生成的Markdown文本将实时显示在这里。" readonly></textarea>
+    </div>
+
+    <script>
+
+        const sourceInput = document.getElementById('sourceText');
+        const targetInput = document.getElementById('targetText');
+
+        sourceInput.addEventListener('input', () => {
+
+            const { value } = sourceInput;
+            
+            if (value.trim() === "") {
+                targetInput.value = "";
+                return;
+            }
+            
+            targetInput.value = processContent(value);
+        });
+
+        // --- 1. 解析内容结构 ---
+        function parseRawData(text) {
+            let result = [];
+            const lines = text.split('\n').map(l => l.trim());
+
+            for (let ln of lines) {
+                if (ln === "" || ln.startsWith("//")) continue;
+
+                let sec_ok = result.length !== 0;
+                let para_ok = sec_ok && result[result.length - 1].paras.length !== 0;
+
+                if (ln.startsWith("§")) {
+                    result.push({ title: "", sec_ancient: ln.replace(/^§/, '').trim(), paras: [] });
+                } else if (ln.startsWith("¶") && sec_ok) {
+                    result[result.length - 1].paras.push({ ancient: "", translation: ln.replace(/^¶/, '').trim(), numbered: [], note: [] });
+                } else if (ln.startsWith("@") && para_ok) {
+                    result[result.length - 1].paras[result[result.length - 1].paras.length - 1].numbered.push(ln.trim());
+                } else if (para_ok) {
+                    result[result.length - 1].paras[result[result.length - 1].paras.length - 1].note.push(ln);
+                } else {
+                    throw new Error(`解析错误：该行无法归入任何章节或段落 -> ${ln}`);
+                }
+            }
+
+            return result.map(sec => {
+                let ancient_arr = sec.sec_ancient.split("¶").map(x => x.trim());
+                if (ancient_arr.length - 1 !== sec.paras.length) throw new Error(`段数不对齐 -> ${ancient_arr[0]}`);
+                ancient_arr.slice(1).forEach((_ancient, i) => { sec.paras[i].ancient = _ancient; });
+                sec.title = ancient_arr[0].trim().replace(/^第/, '');
+                return sec;
+            });
+        }
+
+        // --- 解析元信息 ---
+        function extractDocInfo(text) {
+            const getMeta = (key) => {
+                const match = text.match(new RegExp(`【${key}】\\[([^\\]]+)\\]`));
+                return match ? match[1].trim() : "";
+            };
+            return {
+                title: getMeta("标题"),
+                author: getMeta("地址"),
+                description: getMeta("描述")
+            };
+        }
+
+
+        // --- 拼装文档信息 ---
+        function getCommonMetaText(docInfo) {
+            return `标题：${docInfo.title}
+描述：${docInfo.description}
+仓库地址：${docInfo.author}
+使用协议：CC0 1.0
+
+* 本文的 Markdown 版、 PDF 版的数据源：\`./PDF编译用源码/数据.txt\``;
+        }
+
+
+        // --- 生成 Markdown 代码 ---
+        function renderMarkdown(sections, docInfo) {
+            
+            let header = `\`\`\`less\n${getCommonMetaText(docInfo)}\n\`\`\`\n\n&nbsp;\n\n`;
+            let body = sections.map(sec => {
+                let md = `### ${sec.title}\n\n&nbsp;\n\n`;
+                sec.paras.forEach(p => {
+                    md += `${p.ancient}\n\n\`\`\`less\n${p.translation}\n`;
+                    if (p.numbered.length) md += `\n${p.numbered.join('\n')}\n`;
+                    if (p.note.length) md += `\nnote:\n${p.note.map(n => `　　${n}`).join('\n')}\n`;
+                    md += `\`\`\`\n\n`;
+                });
+                return md;
+            }).join('\n&nbsp;\n\n');
+
+            return header + body;
+        }
+
+        function processContent(text) {
+            const sections = parseRawData(text);
+            const docInfo = extractDocInfo(text);
+            return  renderMarkdown(sections, docInfo)
+        }
+    </script>
+</body>
+</html>
