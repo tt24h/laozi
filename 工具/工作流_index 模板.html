@@ -236,6 +236,7 @@
     document.getElementById('chapterSelect').addEventListener('change', function() {
         if (!this.value) return; 
         document.getElementById(this.value)?.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => { this.value = ""; }, 500);
     });
 
 
