@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>从「数据.txt」还原原文</title>
+    <style>
+        body { margin: 0; padding: 40px 0; font-family: sans-serif; background-color: #fcfcfc; }
+        .container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
+        .item { width: 80%; max-width: 800px; box-sizing: border-box; }
+        textarea { height: 250px; padding: 15px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; resize: vertical; transition: border-color 0.3s; }
+        textarea:focus { border-color: #4a90e2; outline: none; }
+        #targetText { background-color: #f9f9f9; color: #333; }
+        .hint { color: #555; font-size: 14px; padding: 8px 25px; background-color: #ffffff; border: 1px solid #ccc; border-radius: 50px; margin-bottom: 0px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="hint">💡 全选 `数据.txt` 中的内容，粘贴至下方文本框，将自动实时还原为原文。</div>
+        <textarea id="sourceText" class="item" placeholder="将`数据.txt`的内容粘贴至此."></textarea>
+        <textarea id="targetText" class="item" placeholder="还原的原文将实时显示在这里。" readonly></textarea>
+    </div>
+
+    <script>
+
+        const sourceInput = document.getElementById('sourceText');
+        const targetInput = document.getElementById('targetText');
+
+        sourceInput.addEventListener('input', () => {
+
+            const { value } = sourceInput;
+            
+            if (value.trim() === "") {
+                targetInput.value = "";
+                return;
+            }
+            
+            targetInput.value = processContent(value);
+        });
+
+        function processContent(text) {
+
+            const regex = /^\s*§\s*(第[一二三四五六七八九十百]{1,5}章)\s*(.*)$/gm;
+            let results = [];
+            let match;
+
+            while ((match = regex.exec(text)) !== null) {
+
+                const chapterTitle = match[1];
+                let content = match[2];
+
+                content = content.replace(/^¶/, '').trim();
+
+                results.push(`${chapterTitle}\n${content}`);
+            }
+
+            return results.join('\n');
+        }
+
+    </script>
+</body>
+</html>
