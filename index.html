@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>老子道德经：原文译文注释 v0.1.0</title>
+
+    <link rel="manifest" href="manifest.json">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker 注册成功'))
+            .catch(err => console.log('注册失败', err));
+        });
+      }
+    </script>
+    <style>
+        :root {
+            --bg-body: #ffffff;
+            --bg-pre: #f6f8fa;
+            --text-main: #24292e;
+            --text-ancient: #000000;
+            --border-color: #e1e4e8;
+            --hr-color: #eaecef;
+            --line-height: 1.8;
+        }
+
+        body.dark-mode {
+
+            --bg-body: #212830;     
+            --bg-pre: #2d333b;    
+
+            --text-main: #D1D7E0;   
+            --text-ancient: #D1D7E0;
+            
+            --border-color: #444c56; 
+            --hr-color: #373e47;     
+        }
+
+        body {
+            font-family: sans-serif;
+            font-size: 20px;
+            line-height: var(--line-height);
+            color: var(--text-main);
+            background-color: var(--bg-body);
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 15px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .header-info {
+            background: var(--bg-pre);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
+        }
+
+        .controls {
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .controls label {
+            white-space: nowrap; 
+        }
+
+
+        #chapterSelect {
+            display: block;      
+            margin-top: 12px; 
+            padding: 8px;   
+            background: var(--bg-pre);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 8em;
+        }
+
+        h3 {
+            background-color: var(--bg-body); 
+            font-weight: normal;
+            margin: 0; 
+            padding: 15px 0;
+            text-align: center;
+            z-index: 100;
+        }
+
+        .ancient {
+            margin: 20px 0 10px 0;
+            color: var(--text-ancient);
+        }
+
+        pre {
+            background-color: var(--bg-pre);
+            padding: 14px;
+            font-family: "Cascadia Code", "Consolas", "Liberation Mono", "Courier New", monospace;
+            font-size: 0.94em;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            white-space: pre-wrap; 
+            word-wrap: break-word;
+            overflow-x: auto;
+            line-height: var(--line-height);
+            mask-image: radial-gradient(white, black);
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+        }
+
+        pre.no-wrap {
+            white-space: pre;
+            word-wrap: normal;
+        }
+
+        .meta-data {
+            border: none !important;
+            background-color: var(--bg-pre);
+            white-space: pre !important; 
+            word-wrap: normal !important;
+            overflow-x: auto;
+            
+            padding: 0 !important; 
+            margin: 0 0 15px 0;
+        }
+
+        body.hide-translation pre:not(.meta-data) {
+            display: none;
+        }
+
+        #backToTop {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 999;
+            width: 45px;
+            height: 45px;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            background-color: var(--bg-pre); 
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        #backToTop:hover {
+            transform: scale(0.95);
+            background-color: var(--border-color);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            font-size: 0.85em;
+            border-top: 1px solid var(--hr-color);
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px; 
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--border-color); 
+            background-clip: content-box;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-info">
+<pre class="meta-data">标题：老子道德经：原文译文注释 v0.1.0
+描述：以郭简本、帛书本等为底本，配有译文注释和笔记。
+仓库地址：https://github.com/tt24h/laozi
+使用协议：CC0 1.0
+
+* 本文的HTML版、Markdown版、PDF版的数据源：`./PDF编译用源码/数据.txt`
+* 本文件由 Github Actions 自动生成。</pre>
+    
+    <div class="controls">
+        <label><input type="checkbox" id="toggleNoWrap"> 译文块不换行</label>
+        <label><input type="checkbox" id="toggleHideTranslation"> 仅显示原文</label>
+        <label><input type="checkbox" id="toggleDark"> 深色模式</label>
+    </div>
+
+
+    <select id="chapterSelect">
+        <option value="">跳转...</option>
+            <option value="chap1">chap1</option>
+<option value="chap2">chap2</option>
+<option value="chap3">chap3</option>
+<option value="chap4">chap4</option>
+<option value="chap5">chap5</option>
+<option value="chap6">chap6</option>
+<option value="chap7">chap7</option>
+<option value="chap8">chap8</option>
+<option value="chap9">chap9</option>
+<option value="chap10">chap10</option>
+<option value="chap11">chap11</option>
+<option value="chap12">chap12</option>
+<option value="chap13">chap13</option>
+<option value="chap14">chap14</option>
+<option value="chap15">chap15</option>
+<option value="chap16">chap16</option>
+<option value="chap17">chap17</option>
+<option value="chap18">chap18</option>
+<option value="chap19">chap19</option>
+<option value="chap20">chap20</option>
+<option value="chap21">chap21</option>
+<option value="chap22">chap22</option>
+<option value="chap23">chap23</option>
+<option value="chap24">chap24</option>
+<option value="chap25">chap25</option>
+<option value="chap26">chap26</option>
+<option value="chap27">chap27</option>
+<option value="chap28">chap28</option>
+<option value="chap29">chap29</option>
+<option value="chap30">chap30</option>
+<option value="chap31">chap31</option>
+<option value="chap32">chap32</option>
+<option value="chap33">chap33</option>
+<option value="chap34">chap34</option>
+<option value="chap35">chap35</option>
+<option value="chap36">chap36</option>
+<option value="chap37">chap37</option>
+<option value="chap38">chap38</option>
+<option value="chap39">chap39</option>
+<option value="chap40">chap40</option>
+<option value="chap41">chap41</option>
+<option value="chap42">chap42</option>
+<option value="chap43">chap43</option>
+<option value="chap44">chap44</option>
+<option value="chap45">chap45</option>
+<option value="chap46">chap46</option>
+<option value="chap47">chap47</option>
+<option value="chap48">chap48</option>
+<option value="chap49">chap49</option>
+<option value="chap50">chap50</option>
+<option value="chap51">chap51</option>
+<option value="chap52">chap52</option>
+<option value="chap53">chap53</option>
+<option value="chap54">chap54</option>
+<option value="chap55">chap55</option>
+<option value="chap56">chap56</option>
+<option value="chap57">chap57</option>
+<option value="chap58">chap58</option>
+<option value="chap59">chap59</option>
+<option value="chap60">chap60</option>
+<option value="chap61">chap61</option>
+<option value="chap62">chap62</option>
+<option value="chap63">chap63</option>
+<option value="chap64">chap64</option>
+<option value="chap65">chap65</option>
+<option value="chap66">chap66</option>
+<option value="chap67">chap67</option>
+<option value="chap68">chap68</option>
+<option value="chap69">chap69</option>
+<option value="chap70">chap70</option>
+<option value="chap71">chap71</option>
+<option value="chap72">chap72</option>
+<option value="chap73">chap73</option>
+<option value="chap74">chap74</option>
+<option value="chap75">chap75</option>
+<option value="chap76">chap76</option>
+<option value="chap77">chap77</option>
+<option value="chap78">chap78</option>
+<option value="chap79">chap79</option>
+<option value="chap80">chap80</option>
+<option value="chap81">chap81</option>
+    </select>
+</div>
+
+<main>
+    <article>
+<h3 id="chap1">【测试用】【test123】第一章</h3>
+
+<section>
+	<p class="ancient">【测试用】道可道也，非恆道也。名可名也，非恆名也。</p>
+	<pre>
+【测试用】可以从感知直接描述的道，不是恒久适用之道。可以从感知直接命名的名，不是恒久适用之名。
+
+@ *道*：理论。
+@ *名*：模型，是现实与思维的桥梁，是理论与现实相符的前提。
+@ *可*：可能指，可以从感知层面直接把握。14章“寻寻呵，不可名也”。</pre>
+</section>
+
+<section>
+	<p class="ancient">無名，萬物之始也；有名，萬物之母也。故恆無欲也，以觀其眇；恆有欲也，以觀其所徼。兩者同出，異名同謂。玄之又玄，衆眇之門。</p>
+	<pre>
+【测试用】无名，是万物之始；有名，是万物之母。所以总是无欲，以观察始的细微；总是有欲，以观察母的所呈现。始与母同时出现，不同名指称同物。深远再深远，是众细微的入口。
+
+@ *徼*：归终，笔者据此理解为“呈现”。还有“边界”这类意思。
+@ *玄*：深奥。或说根据字形看还有“交缠”这类意思。
+
+note:
+　　【测试用】有两种命名体系，叫作无名、有名。这两种命名体系呈现的作用为始、母。
+　　同个物从无欲、有欲两个角度去观察会得到两种结论。无名、有名便是对这两种结论的命名。
+　　无名，无形之名，是对不可直接感知的命名；有名，有形之名，是对直接感知的命名。
+　　两种名指称同个物，这种现象意义深远，是众眇之门。
+　　众眇，即众术语，如常、明、身、道、德、一、死地、万物负阴而抱阳等等。
+　　这些术语都锚在无名与有名的这种现象，构成了老子的理论。故曰，众眇之门。</pre>
+</section>
+
+</article>
+<!--==================================================-->
+<article>
+<h3 id="chap2">【测试用】 第二章</h3>
+
+<section>
+	<p class="ancient">天下皆知美之爲美也，惡已。皆知善，斯不善已。</p>
+	<pre>
+【测试用】天下都知道哪种美是美，恶已经确定。都知道善是什么，这样不善是什么已经清楚。
+
+@ *已*：到此为止，界限已划分清楚。
+@ *恶*：厌恶之恶。
+@ *善*：人之道之善。</pre>
+</section>
+
+<section>
+	<p class="ancient">有、無之相生也。難、易之相成也。長、短之相形也。高、下之相盈也。音、聲之相和也。先、後之相隨也。</p>
+	<pre>
+【测试用】有、无的相互作用产生“生”。难、易的相互作用产生“成”。长、短的相互作用产生“形”。高、下的相互作用产生“盈”。音、声的相互作用产生“和”。先、后的相互作用产生“随”。
+
+@ *相*：译文中笔者将“相”理解成“两相作用共同产生结果”，但字典中并无此义项。字典中“相”有各方相互作用的意思，如，邻国相望，鸡犬之声相闻。还有一方对另一方的动作的意思，如，相信、实不相瞒、好言相劝。
+
+note:
+　　从导电性角度看，铜是美，橡胶是恶。然而，当从绝缘性角度看，结论就反转。如果仅依据一个或有限视角下的美恶结论作为最终结论，电线是不会存在的。
+　　然而`. . . . . . . . . . ` 这种解释似乎太宽泛了。还有一种断句：
+　　【原文】有，无之相生也。难，易之相成也。长，短之相形也。高，下之相盈也。音，声之相和也。先，后之相随也。
+　　【译文】有，是无产生的。难，是易造就的。长，是短显露的。高，是下填满的。音，是声协调的。先，是后跟随的。
+　　与之相呼应的内容有：08章“居众之所恶，故幾于道矣”、11章“有之以为利，无之以为用”、39章“必高矣而以下为基”、40章“反也者，道之动也”等。
+　　老子似乎是在说，同角度下互斥的美恶两端，并非独立，而是因与果。</pre>
+</section>
+
+<section>
+	<p class="ancient">是以聖人居無爲之事，行不言之教。萬物作而弗始也，爲而弗志也，成而弗居。</p>
+	<pre>
+因此圣人居无为的事，施行不言的教化。万物兴作而不干预，有作为而不凭志向，完成而不占据。
+
+@ *为而弗志*：可能指不把自己意志加于人。todo总觉得缺点什么。</pre>
+</section>
+
+<section>
+	<p class="ancient">夫唯弗居也，是以弗去也。</p>
+	<pre>
+只有不占据，因此〔功效〕不离去。</pre>
+</section>
+
+</article>
+<!--==================================================-->
+<article>
+<h3 id="chap3">三章</h3>
+
+<section>
+	<p class="ancient">不上賢，使民不爭。不貴難得之貨，使民不爲盜。不見可欲，使民不亂。</p>
+	<pre>
+不推崇优秀人才，使民不竞争。不加价难得的商品，使民不偷盗。不显现可以欲求的事物，使民不被扰乱。</pre>
+</section>
+
+<section>
+	<p class="ancient">是以聖人之治也，虚其心，實其腹；弱其志，强其骨。恆使民無知、無欲也，使夫智不敢。</p>
+	<pre>
+因此圣人的治理，松动其立场，充实其肚子；削弱其志向，强健其身体。总使民没有〔与底层机制不符的〕知、没有欲求的事物，使智不敢。
+
+note:
+　　文中“知”可能有两种含义：一、知道。二、本章之知，可能指与底层机制不相符的知识，智属于其子集。见于10章“明白四达，能无以知乎”、57章“人多知，而奇物滋起”。</pre>
+</section>
+
+<section>
+	<p class="ancient">弗爲而已，則無不治矣。</p>
+	<pre>
+仅仅是不为，就〔会方方面面〕没有不被治理的。</pre>
+</section>
+
+</article>
+<!--==================================================-->
+<article>
+<h3 id="chap4">四章</h3>
+
+<section>
+	<p class="ancient">道沖，而用之又弗盈也。</p>
+	<pre>
+道空虚，因而用起来又不会占用空间。
+
+@ *沖*：空虚。笔者理解成不是可以被直觉感知的实物。实物比如生活用品、沙子、水、气、电波、各种场等。45章“大盈若沖，其用不穷”。
+@ *盈*：使满、填充。可能指占用空间。</pre>
+</section>
+
+<section>
+	<p class="ancient">淵呵，似萬物之宗。挫其鋭，解其紛，和其光，同其塵。</p>
+	<pre>
+深不见底啊，好像是万物根源。锉掉万物的锋芒，解开万物的争执，与其光谐和，与其尘同一体。</pre>
+</section>
+
+<section>
+	<p class="ancient">湛呵，似或存。吾不知其誰之子也，象帝之先。</p>
+	<pre>
+沉没不见啊，好像是独自存在。我不知道其是谁的孩子，出现在有形主宰之先。
+
+@ *或存*：笔者理解成，是独立完整的存在，而不是更大整体中某部分的存在。
+
+note:
+　　别处的“似”字或“若”字等多具有“好像、像似”这类意思，所指的往往是同事物从有形和无形两个角度观察时呈现的反差，这种反差通常很具体。本章“似”字似乎含有“不确定”这类意思，这可能与25章“域中有四大焉”有关。
+　　在25章老子提出了“域”的概念，似乎是划定了可探究认识的范围，但“域”外情况未作介绍。
+　　无法断定域内源头为最终源头，本章用“似”字（“似万物之宗”、“似或存”）可能是为了包含在探知能力之外的域外情况，使理论完整。
+　　关于域外情况，仅见于本章。这些是个人见解，仅供参考。</pre>
+</section>
+
+</article>
+<!--==================================================-->
+<article>
+<h3 id="chap5">七十九章</h3>
+
+<section>
+	<p class="ancient">和大怨，必有餘怨，安可以爲善？是以聖人執左契，而不以責於人。故有德司契，無德司徹。天道無親，恆與善人。</p>
+	<pre>
+平息大怨恨，必然会有余怨，怎么可以算得上妥善〔的处理方式〕？因此圣人握着证据，却不凭此向人索取。所以有德的做法是完善证据，无德的做法是追着要求偿还。天道没有与谁为亲，总是帮助符合道的。
+
+@ *左契*：← 帛乙本。或作“右契”，异文不影响文义。“契”，契约、合同。契分两半，由债权方（圣人）、债务方分别保管。</pre>
+</section>
+
+</article>
+<!--==================================================-->
+<article>
+<h3 id="chap6">八十章</h3>
+
+<section>
+	<p class="ancient">小國寡民，使有十百人之器而勿用，使民重死而遠徙。</p>
+	<pre>
+领土小、人口少，使有十百倍人工效率的工具而不去使用，使民重视死亡而远离迁徙〔习惯〕。
+
+@ *重死*：75章“民之轻死也，以其求生之厚也”。</pre>
+</section>
+
+<section>
+	<p class="ancient">有舟車無所乘之，有甲兵無所陳之，使民復結繩而用之。甘其食，美其服，樂其俗，安其居。</p>
+	<pre>
+有船和车没有需求乘用之，有铠甲和兵器没有需求陈列之，使民恢复结绳记事时的生活方式。可口其食物，好看其穿着，愉悦其习俗，安适其居所。</pre>
+</section>
+
+<section>
+	<p class="ancient">鄰國相望，鷄犬之聲相聞，民至老死，不相往來。</p>
+	<pre>
+邻国相互望得见，鸡狗的声音相互听得到，〔各国〕民直至老死，也不相互往来。</pre>
+</section>
+
+</article>
+<!--==================================================-->
+<article>
+<h3 id="chap7">八十一章</h3>
+
+<section>
+	<p class="ancient">信言不美，美言不信。知者不博，博者不知。善者不多，多者不善。聖人無積，既以爲人己愈有，既以予人己愈多。</p>
+	<pre>
+信言不美，美言不信。有真知的不博学，博学的不会有真知。符合道的不求多，求多的不符合道。圣人不囤积，都用来帮助人自己越来越有，都用来给予人自己越来越多。</pre>
+</section>
+
+<section>
+	<p class="ancient">故天之道，利而不害。人之道，爲而弗爭。</p>
+	<pre>
+所以天之道，有好处而没害处。人之道，行事而弗争。</pre>
+</section>
+
+</article>
+<!--==================================================-->
+</main>
+
+<button id="backToTop" title="回到顶部">↑</button>
+
+<footer class="footer">
+    ~~~ End ~~~
+</footer>
+
+<script>
+    document.getElementById('toggleNoWrap').addEventListener('change', function() {
+        document.querySelectorAll('pre').forEach(pre => {
+            this.checked ? pre.classList.add('no-wrap') : pre.classList.remove('no-wrap');
+        });
+    });
+
+    document.getElementById('toggleDark').addEventListener('change', function() {
+        this.checked ? document.body.classList.add('dark-mode') : document.body.classList.remove('dark-mode');
+    });
+
+    document.getElementById('toggleHideTranslation').addEventListener('change', function() {
+        if (this.checked) {
+            document.body.classList.add('hide-translation');
+        } else {
+            document.body.classList.remove('hide-translation');
+        }
+    });
+
+    document.getElementById('chapterSelect').addEventListener('change', function() {
+        if (!this.value) return; 
+        document.getElementById(this.value)?.scrollIntoView({ behavior: 'smooth' });
+    });
+
+
+    document.getElementById('backToTop').addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+
+</body>
+</html>
