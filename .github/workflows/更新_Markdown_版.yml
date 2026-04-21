@@ -1,7 +1,7 @@
 # 【作用】 当 `PDF编译用源码/数据.txt` 变更时，分配任务，及文件处理完毕后的 git 操作。
-# 【调用】 本文件会调用 `./工具/工作流_更新 HTML 版和 Markdown 版.js` 执行更新 HTML版 和 Markdown版 的具体代码。
+# 【调用】 本文件会调用 `./工具/工作流_更新_Markdown_版.js` 生成 Markdown 版新代码。
 
-name: 自动同步 HTML 和 Markdown 版
+name: 自动同步 Markdown 版
 on:
   push:
     paths:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-update:
-    name: 正在更新 HTML 和 Markdown 版
+    name: 更新中：Markdown 版
     runs-on: ubuntu-latest
     permissions:
       contents: write # 赋予脚本推送到仓库的权限
@@ -22,18 +22,18 @@ jobs:
       - name: 执行转换脚本
       
              # 🥕 调用执行更新任务。
-        run: node "工具/工作流_更新 HTML 版和 Markdown 版.js" 
+        run: node "工具/工作流_更新_Markdown_版.js" 
 
       - name: 提交并推回仓库
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          git add "老子道德经：原文译文注释.md" "index.html"
+          git add "老子道德经：原文译文注释.md"
           
           if git diff --staged --quiet; then
             echo "没有内容变化，跳过提交。"
           else
-            git commit -m "docs: 自动同步数据更新至 Markdown 和 HTML 网页"
+            git commit -m "docs: 更新 Markdown 版"
             git push
           fi
