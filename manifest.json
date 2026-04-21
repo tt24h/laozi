@@ -2,7 +2,7 @@
   "name": "老子道德经：原文译文注释",
   "short_name": "Carrot",
   "start_url": "index.html",
-  "display": "browser",
+  "display": "standalone",
   "background_color": "#ffffff",
   "icons": [
     {
