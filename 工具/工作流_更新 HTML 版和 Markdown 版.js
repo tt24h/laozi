@@ -62,7 +62,7 @@ function getCommonMetaText(docInfo) {
 仓库地址：${docInfo.author}
 使用协议：CC0 1.0
 
-* 本文的HTML版、Markdown版、PDF版的数据源：\`./PDF编译用源码/数据.txt\`
+* 本文的 HTML版、Markdown版、PDF版的数据源：\`./PDF编译用源码/数据.txt\`
 * 本文件由 Github Actions 自动生成。`;
 }
 
