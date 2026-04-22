@@ -1,6 +1,6 @@
 /** 
- * 文件：main.typ
- * 输出：老子道德经：原文译文注释。以 章原文-章译文-章注释和笔记 形式输出。
+ * 文件：main_小段.typ
+ * 输出：老子道德经：原文译文注释。以 段原文-段译文-段注释和笔记 形式输出。
  * 引用关系：本文件读取了`数据.txt`，没有被别的文件调用。
  */
 
@@ -88,14 +88,14 @@
 
 #set text(
   font:("Noto Serif CJK SC"),
-  size: 12pt,
+  size: 11.2pt,
   weight: 400,
   lang: "zh",
 )
 
 #set par(
-  spacing:1.1em, 
-  leading:1.1em,
+  spacing:1.2em, 
+  leading:1.2em
 )
 
 #set page(
@@ -119,10 +119,6 @@
     }
 )
 
-#set math.frac(style: "skewed")
-
-#show math.equation: set text(font: "STIX Two Math")
-
 #show raw: set text(font: "Noto Serif CJK SC", weight: 400)
 
 #show strong: set text(font: "Noto Sans CJK SC", weight: 0) // 100 + delta = 300
@@ -131,9 +127,6 @@
   set block(sticky: true)
   align(center, text(font: "Noto Sans CJK SC", weight: 400, it))
   v(2em)
-}
-#show <part> : it => {
-  parbreak();pad(y:0.4em, it);parbreak()
 }
 
 
@@ -172,76 +165,49 @@
 ]
 #pagebreak()
 
-
-
 /* 正文页 ::::::::::::::: */
 #for (i, sec) in _内容解析结果_.enumerate(start: 1) {
     
   // 章标题
   [ = #sec.title ] 
 
-  [【原文】<part>]
-
-  let processed_ancient = sec.paras
-      .map(para => "#h(2em)" + para.ancient).join("#parbreak()")
-  // 原文
-  eval(processed_ancient, mode: "markup")
-
-  [【译文】<part>]
-
-  let processed_translation = sec.paras
-      .map(para => "#h(2em)" + para.translation).join("#parbreak()")
-
-  // 译文
-  eval(processed_translation, mode: "markup")
-
-  let has_anno = {
-    let len_numbered =  sec.paras.map(para => para.numbered.len()).sum()
-    let len_note = sec.paras.map(para => para.note.len()).sum()
-    (len_numbered + len_note) != 0
-  }
-
-  if has_anno {
-    [【注释】<part>]
-  } else {
-    if i != 81 { pagebreak() }
-    continue
-  }
-
   for (i, para) in sec.paras.enumerate(start: 1) {
 
-    let order = box($frac(#str(i), #str(sec.paras.len()))$, width: 1em, inset: 0pt)
-
-    let processed_ancient = (
-      "#h(1em)",
-      para.ancient,
-      "#parbreak()"
-    ).join("")
-
-    // 原文（在【注释】中）
-    order + eval(processed_ancient, mode: "markup")
-
-    if para.numbered.len() != 0 {
-      
-      let processed_numbered = para.numbered.map(
-        line => "#h(2em)" + line.replace("：", "#box(width:1em, [：])", count: 1)
-      ).join("#parbreak()") + "#parbreak()"
-
-      // 注释
-      eval(processed_numbered, mode: "markup")
-    }
-
-    if para.note.len() != 0 {
-      set text(fill: olive)
-      let processed_note = para.note.map(
-        line => "#h(2em)" + line
-      ).join("#parbreak()") + "#parbreak()"
-
-      // 笔记
-      eval(processed_note, mode: "markup")
+    {
+      set text(font:"Noto Sans CJK SC", size: 1.2em, weight: 400);
+  
+      // 原文
+      [ #eval(para.ancient, mode: "markup") ]  
     }
     
-  }
+    pad(left:1.2em, y:1em,{
+      
+      set par(justify: true)
+      
+      // 译文
+      [ #eval(para.translation, mode: "markup"); #parbreak()]
+           
+      // 注释
+      if para.numbered.len() != 0 {
+        v(1em)
+        for item in para.numbered {
+          let processed = item.replace("：", "#box(width:1em, [：])", count: 1)
+          [ + #eval(processed, mode: "markup") ]
+        }
+      }
+
+      // 笔记
+      if para.note.len() != 0 {
+        v(1em)
+        set text(fill: olive)
+        for item in para.note {
+          let processed = "#h(2em)" + item + "#linebreak()"
+          [ #eval(processed, mode: "markup") ] 
+        }
+      }
+      
+    })  // end ← 译文等段 
+  }     // end ← 段处理
   if i != 81 { pagebreak() }
-}      
+}       // end ← 章处理
 #align(right, [（完）])

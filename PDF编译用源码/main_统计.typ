@@ -1,7 +1,7 @@
 /** 
  * 文件：main_统计.typ
  * 输出：老子道德经：原文译文注释（仅输出统计结果）
- * 引用关系：本文件调用了`数据.txt`，没有被别的文件调用。
+ * 引用关系：本文件读取了`数据.txt`，没有被别的文件调用。
  */
 
 /**
@@ -128,7 +128,6 @@
   )
 
   // 返回值
-
   (
     章节数: _章节数_,
     段落数: _段落数_,
@@ -151,7 +150,25 @@
 
 #set text(font:"Noto Serif CJK SC")
 
-#set page("a4", numbering: "1")
+#set page(
+  "a4", 
+  numbering: "1",
+  header: context {
+    let curr-page = here().page()
+    
+    let headings = query(heading.where(level: 1))
+    let on-page = headings.filter(h => h.location().page() == curr-page)
+    
+    if on-page.len() > 0 {
+      return none
+    }
+    
+    let before = headings.filter(h => h.location().page() < curr-page)
+    if before.len() > 0 {
+      align(center, text(before.last().body, 0.8em))
+    }
+  }
+)
 
 #set par(spacing: 1em, leading: 1em)
 
@@ -201,53 +218,43 @@
 = 原文字频统计（出现次数排序）
 
 原文共含 #_统计结果_.未排序字频结果.len() 个不重复字符。
-#v(1em)
-#columns(2, gutter: 2em, )[
 
-  #let _排序后结果_ = _统计结果_.未排序字频结果.sorted(key: x => x.出现次数).rev()
-  
-  #for char_info in _排序后结果_ {
-    h(4em);box(inset:0pt, width: 3em)[
-      U+#str(char_info.unicode, base:16)
-    ]
-    
-    h(3em);box(inset:0pt, width: 1.4em, 
-      outset: 0pt,
-      stroke: none)[
-      #align(center)[#char_info.字]
-    ]
-    h(3em)
-    box(width: 3em)[#align(right, str(char_info.出现次数))]
-    
-    linebreak()
-  }
-  #colbreak()
-]
+#let _排序后结果_ = _统计结果_.未排序字频结果.sorted(key: x => x.出现次数).rev()
 
+#let _用于表格_ =  for (i, char_info) in _排序后结果_.enumerate(start: 1) {
+  (
+    str(i), 
+    str(char_info.unicode, base:16),
+    str(char_info.字),
+    str(char_info.出现次数)
+  )
+}
+#table(
+  align: horizon + center,
+  columns: (3em, 4em, 5em, 3em),
+  stroke: none,
+  .._用于表格_.flatten()
+)
 #pagebreak()
 
 = 原文字频统计（Unicode 排序）
-#columns(2, gutter: 2em, )[
 
-  #let _排序后结果_ = _统计结果_.未排序字频结果.sorted(key: x => x.unicode)
-  
-  #for char_info in _排序后结果_ {
-    h(4em);box(inset:0pt, width: 3em)[
-      U+#str(char_info.unicode, base:16)
-    ]
-    
-    h(3em);box(inset:0pt, width: 1.4em, 
-      outset: 0pt,
-      stroke: none)[
-      #align(center)[#char_info.字]
-    ]
-    h(3em)
-    box(width: 3em)[#align(right, str(char_info.出现次数))]
-    
-    linebreak()
-  }
-  #colbreak()
-]
+#let _排序后结果_ = _统计结果_.未排序字频结果.sorted(key: x => x.unicode)
+
+#let _用于表格_ =  for (i, char_info) in _排序后结果_.enumerate(start: 1) {
+  (
+    str(i), 
+    str(char_info.unicode, base:16),
+    str(char_info.字),
+    str(char_info.出现次数)
+  )
+}
+#table(
+  columns: (3em, 4em,5em, 3em),
+  stroke: none,
+  .._用于表格_.flatten()
+)
+
 
 
 
