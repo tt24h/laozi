@@ -185,7 +185,10 @@
   let processed_ancient = sec.paras
       .map(para => "#h(2em)" + para.ancient).join("#parbreak()")
   // 原文
-  eval(processed_ancient, mode: "markup")
+  {
+    set text(weight: 500, size:1.1em)
+    eval(processed_ancient, mode: "markup")
+  }
 
   [【译文】<part>]
 
@@ -217,8 +220,17 @@
       "#parbreak()"
     ).join("")
 
-    // 原文（【注释】中的）
-    order + eval(processed_ancient, mode: "markup")
+    underline(
+      stroke: 0.6pt,
+      background: true,
+      evade: false,
+      offset: 0.3em,
+      
+      // 原文（【注释】中的）
+      order + eval(processed_ancient, mode: "markup")
+    )
+    
+    parbreak()
 
     if para.numbered.len() != 0 {
       

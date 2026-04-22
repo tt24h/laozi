@@ -7,10 +7,10 @@
         body { margin: 0; padding: 40px 0; font-family: sans-serif; background-color: #fcfcfc; }
         .container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
         .item { width: 80%; max-width: 800px; box-sizing: border-box; }
-        textarea { height: 250px; padding: 15px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; resize: vertical; transition: border-color 0.3s; }
+        textarea { height: 250px; padding: 15px; font-size: 16px; border: 2px solid #ddd; resize: vertical;}
         textarea:focus { border-color: #4a90e2; outline: none; }
         #targetText { background-color: #f9f9f9; color: #333; }
-        .hint { color: #555; font-size: 14px; padding: 8px 25px; background-color: #ffffff; border: 1px solid #ccc; border-radius: 50px; margin-bottom: 0px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 500; }
+        .hint { color: #555; font-size: 14px; padding: 8px 25px; border: 1px solid #ccc; border-radius: 50px;}
     </style>
 </head>
 <body>
@@ -71,7 +71,7 @@
             });
         }
 
-        // --- 解析元信息 ---
+        // --- 2. 解析元信息 ---
         function extractDocInfo(text) {
             const getMeta = (key) => {
                 const match = text.match(new RegExp(`【${key}】\\[([^\\]]+)\\]`));
@@ -96,7 +96,7 @@
         }
 
 
-        // --- 生成 Markdown 代码 ---
+        // --- 3. 生成 Markdown 代码 ---
         function renderMarkdown(sections, docInfo) {
             
             let header = `\`\`\`less\n${getCommonMetaText(docInfo)}\n\`\`\`\n\n&nbsp;\n\n`;
@@ -106,7 +106,7 @@
                     md += `${p.ancient}\n\n\`\`\`less\n${p.translation}\n`;
                     if (p.numbered.length) md += `\n${p.numbered.join('\n')}\n`;
                     if (p.note.length) md += `\nnote:\n${p.note.map(n => `　　${n}`).join('\n')}\n`;
-                    md += `\`\`\`\n\n`;
+                    md += `\`\`\`\n`;
                 });
                 return md;
             }).join('\n&nbsp;\n\n');
@@ -114,6 +114,7 @@
             return header + body;
         }
 
+        // --- 4. 开始解析、生成。 ---
         function processContent(text) {
             const sections = parseRawData(text);
             const docInfo = extractDocInfo(text);

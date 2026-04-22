@@ -119,8 +119,10 @@
 #for (i, sec) in _内容解析结果_.enumerate(start: 1) {
 
   let sec_title = [（#str(i);章）]
+  
   v(1em, weak: true)
   sec.paras.map(para => para.ancient).join("") + sec_title + parbreak()
   v(1em)
-}       // end ← 章处理
+  
+}
 #align(right, [（完）])
