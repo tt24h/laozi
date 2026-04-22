@@ -195,12 +195,11 @@
   // 译文
   eval(processed_translation, mode: "markup")
 
-  let has_anno = {
-    let len_numbered =  sec.paras.map(para => para.numbered.len()).sum()
-    let len_note = sec.paras.map(para => para.note.len()).sum()
-    (len_numbered + len_note) != 0
-  }
-
+  let has_anno = (
+    sec.paras.map(para => para.numbered.len()).sum(),
+    sec.paras.map(para => para.note.len()).sum(),
+  ).sum() != 0
+  
   if has_anno {
     [【注释】<part>]
   } else {
@@ -218,7 +217,7 @@
       "#parbreak()"
     ).join("")
 
-    // 原文（在【注释】中）
+    // 原文（【注释】中的）
     order + eval(processed_ancient, mode: "markup")
 
     if para.numbered.len() != 0 {
