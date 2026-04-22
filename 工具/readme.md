@@ -8,7 +8,7 @@
 2. 从「数据.txt」生成Markdown版.html：
 	* **作用**：解析「数据.txt」数据，生成 Markdown 版文本。
 	* 在上方文本框粘贴「数据.txt」的所有内容。
-	* 下方文本框会实时显示相应的 Markdown 版文本。
+	* 下方文本框会实时显示 Markdown 版文本。
 	
 3. 编辑、编译PDF简短指南.md
-* **作用**：简短介绍用 Typst 编译 PDF 的方法。
+    * **作用**：简短介绍 Typst 编译 PDF 。
