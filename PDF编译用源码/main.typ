@@ -114,8 +114,8 @@
   margin:(x:2.9cm, y:3.3cm), 
   numbering: "1",
   header: context {
-      let curr-page = here().page()
-      
+    
+      let curr-page = here().page()  
       let headings = query(heading.where(level: 1))
       let on-page = headings.filter(h => h.location().page() == curr-page)
       
@@ -124,6 +124,7 @@
       }
       
       let before = headings.filter(h => h.location().page() < curr-page)
+      
       if before.len() > 0 {
         align(center, text("（ " + before.last().body + " ）", 0.8em))
       }
@@ -194,6 +195,7 @@
 
     // 原文
     eval(x_ancient, mode: "markup")
+    parbreak()
   }
   
   pad(y:1em, box(width: 37%, height:0.8pt, line(length: 100%, stroke: 0.8pt)))
@@ -216,8 +218,9 @@
           // 注释
           v(0.6em)
           eval(x_numbered, mode: "markup")
-          v(0.6em)
           parbreak()
+          v(0.6em)
+          
         }
 
         if para.note.len() != 0 {
@@ -227,9 +230,10 @@
     
           // 笔记
           if para.numbered.len() == 0 {v(0.6em)}
-          eval(x_note, mode: "markup") 
-          v(0.6em) 
+          eval(x_note, mode: "markup")
           parbreak()
+          v(0.6em) 
+          
         }
       }
     )    
