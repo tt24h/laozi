@@ -11,12 +11,24 @@
         textarea:focus { border-color: #4a90e2; outline: none; }
         #targetText { background-color: #f9f9f9; color: #333; }
         .hint { color: #555; font-size: 14px; padding: 8px 25px; border: 1px solid #ccc; border-radius: 50px;}
+
+        .selector-group { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #444; }
+        select { padding: 5px 10px; border-radius: 4px; border: 1px solid #ccc; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="hint">💡 全选 `数据.txt` 中的内容，粘贴至下方文本框，将自动实时显示Markdown文本。</div>
+
+        <div class="selector-group">
+            <label for="modeSelect">选择生成模板：</label>
+            <select id="modeSelect">
+                <option value="default">章内原文分散</option>
+                <option value="one">章内原文集中</option>
+            </select>
+        </div>
+
         <textarea id="sourceText" class="item" placeholder="将`数据.txt`的内容粘贴至此."></textarea>
         <textarea id="targetText" class="item" placeholder="生成的Markdown文本将实时显示在这里。" readonly></textarea>
     </div>
@@ -25,6 +37,24 @@
 
         const sourceInput = document.getElementById('sourceText');
         const targetInput = document.getElementById('targetText');
+        const modeSelect = document.getElementById('modeSelect');
+
+        const updateOutput = () => {
+            const { value } = sourceInput;
+            if (value.trim() === "") {
+                targetInput.value = "";
+                return;
+            }
+
+            targetInput.value = processContent(value);
+        };
+
+        sourceInput.addEventListener('input', updateOutput);
+
+        modeSelect.addEventListener('change', updateOutput);
+
+        window.onload = updateOutput;
+
 
         sourceInput.addEventListener('input', () => {
 
@@ -87,29 +117,77 @@
 
         // --- 拼装文档信息 ---
         function getCommonMetaText(docInfo) {
+
             return `标题：${docInfo.title}
 描述：${docInfo.description}
 仓库地址：${docInfo.author}
 使用协议：CC0 1.0
 
-* 本文的 Markdown 版、 PDF 版的数据源：\`./PDF编译用源码/数据.txt\``;
+* 本文的 Markdown 版、 PDF 版的数据源：\`./PDF编译用源码/数据.txt\`
+* 本文各版均有两种排版逻辑：章内原文集中、章内原文分散，详见仓库。仓库内还有字典介绍等。`;
         }
 
 
         // --- 3. 生成 Markdown 代码 ---
-        function renderMarkdown(sections, docInfo) {
+        function renderMarkdown(sections, docInfo, mode) {
+
+            const title = `老子道德经：原文译文注释\n======\n`
             
-            let header = `\`\`\`less\n${getCommonMetaText(docInfo)}\n\`\`\`\n\n&nbsp;\n\n`;
-            let body = sections.map(sec => {
+            let header = title + `\`\`\`less\n${getCommonMetaText(docInfo)}\n\`\`\`\n\n&nbsp;\n\n`;
+            
+            let body = sections.map((sec, s) => {
+
                 let md = `### ${sec.title}\n\n&nbsp;\n\n`;
-                sec.paras.forEach(p => {
-                    md += `${p.ancient}\n\n\`\`\`less\n${p.translation}\n`;
-                    if (p.numbered.length) md += `\n${p.numbered.join('\n')}\n`;
-                    if (p.note.length) md += `\nnote:\n${p.note.map(n => `　　${n}`).join('\n')}\n`;
-                    md += `\`\`\`\n`;
-                });
+
+                // 章内原文分散
+                if (mode === 'default')  {
+
+                    sec.paras.forEach((p, i) => {
+
+                        const isLastPara = (i === sec.paras.length - 1);
+                        
+                        md += `${p.ancient}\n\n\`\`\`less\n${p.translation}\n`;
+                        if (p.numbered.length) md += `\n${p.numbered.join('\n')}\n`;
+                        if (p.note.length) md += `\nnote:\n${p.note.map(n => `　　${n}`).join('\n')}\n`;
+                        md += `\`\`\``;
+                        md += isLastPara ? `` : `\n\n`;
+                    });
+
+
+                // 章内原文集中 
+                } else {
+
+                    md += sec.paras.map(p => p.ancient).join('\n\n') + "\n\n&nbsp;\n\n";
+
+                    sec.paras.forEach((p, i) => {
+
+                        const index = i + 1;
+                        const isLastPara = (i === sec.paras.length - 1)
+
+                        md += `${index}. ${p.translation}\n`;
+
+                        if (p.numbered.length) {
+
+                            const isEndOfSection = isLastPara && p.note.length === 0;
+
+                            md += '\n' + p.numbered.map(anno => {
+
+                                const  cleanAnno = anno.replace('*', '').replace('*', '').replace('@', '');
+                                return `\t - ${cleanAnno}`
+
+                            }).join('\n') + (isEndOfSection ? '\n' : '\n\n');
+
+                        };
+
+                        if (p.note.length) {
+
+                            md += (p.numbered.length ? '' : '\n') + p.note.map(line => `> ${line}`).join("\n>\n") + (isLastPara ? '\n' : '\n\n');
+                        };
+                    });
+                }
+
                 return md;
-            }).join('\n&nbsp;\n\n');
+            }).map(x => x.trim('\n')).join('\n\n&nbsp;\n\n');
 
             return header + body;
         }
@@ -118,7 +196,7 @@
         function processContent(text) {
             const sections = parseRawData(text);
             const docInfo = extractDocInfo(text);
-            return  renderMarkdown(sections, docInfo)
+            return  renderMarkdown(sections, docInfo, modeSelect.value)
         }
     </script>
 </body>
