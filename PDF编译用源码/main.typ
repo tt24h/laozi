@@ -1,6 +1,6 @@
 /** 
  * 文件：main.typ
- * 输出：老子道德经：原文译文注释。以 章原文-章译文-章注释和笔记 形式输出。
+ * 输出：老子道德经：原文译文注释。输出 章内原文集中型。
  * 引用关系：本文件读取了`数据.txt`，没有被别的文件调用。
  */
 
@@ -10,14 +10,25 @@
  * =======================================================
  */
 
+#let _解析字段_(content, tag) = {
+  
+  let pattern = regex("【" + tag + "】\[[^\]]+\]")
+  let match = content.find(pattern)
+  
+  if match == none { panic("未在`数据.txt`找到：【" + tag + "】") }
+  
+  match.trim("【" + tag + "】").trim("[").trim("]")
+}
+
 #let _文档信息解析结果_ = {
+  
   let txt_string = read("数据.txt")
+  
   (
-    title: txt_string.find(regex("【标题】\[[^\]]+\]")).trim("【标题】").trim("[").trim("]"),
-    author: txt_string.find(regex("【地址】\[[^\]]+\]")).trim("【地址】").trim("[").trim("]"),
-    description: txt_string.find(regex("【描述】\[[^\]]+\]")).trim("【描述】").trim("[").trim("]"),
-    keywords: txt_string.find(regex("【关键词】\[[^\]]+\]"))
-                        .trim("【关键词】").trim("[").trim("]").split("&").map(x => x.trim()),
+    title: _解析字段_(txt_string, "标题"),
+    author: _解析字段_(txt_string, "地址"),
+    description: _解析字段_(txt_string, "描述"),
+    keywords: _解析字段_(txt_string, "关键词").split("&").map(x => x.trim()),
   )
 }
 
@@ -94,8 +105,8 @@
 )
 
 #set par(
-  spacing:1.1em, 
-  leading:1.1em,
+  spacing:1.3em, 
+  leading:1.3em,
 )
 
 #set page(
@@ -114,29 +125,22 @@
       
       let before = headings.filter(h => h.location().page() < curr-page)
       if before.len() > 0 {
-        align(center, text("（" + before.last().body + "）", 0.8em))
+        align(center, text("（ " + before.last().body + " ）", 0.8em))
       }
     }
 )
 
+#set strong(delta: 200)
 #set math.frac(style: "skewed")
 
+#show raw: set text(font:"Noto Sans CJK SC")
 #show math.equation: set text(font: "STIX Two Math")
-
-#show raw: set text(font: "Noto Serif CJK SC", weight: 400)
-
-#show strong: set text(font: "Noto Sans CJK SC", weight: 0) // 100 + delta = 300
 
 #show heading: it => {
   set block(sticky: true)
   align(center, text(font: "Noto Sans CJK SC", weight: 400, it))
   v(2em)
 }
-#show <part> : it => {
-  parbreak();pad(y:0.4em, it);parbreak()
-}
-
-
 
 /* 封面页 ::::::::::::::: */
 #[
@@ -160,6 +164,8 @@
   #h(2em);本文原文部分来自《老子道德经：四种原文表》中的各表首行文本。各表首行文本校订自王弼本、帛书本、郭简本及北大本，优先选用古早版本的文本，例外少。\
   
   #h(2em);使用王弼本分章方案，配有译文注释和笔记。注释以文义理解为主，不包含大量字典释义。在本文仓库内有：字典与字典工具的介绍文档，本文的 Markdown 版，生成本 PDF 文件的 Typst 格式源码。\
+
+  #h(2em);Markdown版的排版逻辑与本PDF不同，是：章标题 → 一段原文及相应译文注释等 → 下一段原文及相应译文注释等 → … → 下章标题。
   
   #h(2em);*注意*：仅在编写期间，笔者对文义的理解就经历了多次转变，不排除以后还会推翻文中的观点。故本文仅供参考。\
   
@@ -180,78 +186,53 @@
   // 章标题
   [ = #sec.title ] 
 
-  [【原文】<part>]
-
-  let processed_ancient = sec.paras
+  let x_ancient = sec.paras
       .map(para => "#h(2em)" + para.ancient).join("#parbreak()")
-  // 原文
+      
   {
     set text(weight: 500, size:1.1em)
-    eval(processed_ancient, mode: "markup")
+
+    // 原文
+    eval(x_ancient, mode: "markup")
   }
-
-  [【译文】<part>]
-
-  let processed_translation = sec.paras
-      .map(para => "#h(2em)" + para.translation).join("#parbreak()")
-
-  // 译文
-  eval(processed_translation, mode: "markup")
-
-  let has_anno = (
-    sec.paras.map(para => para.numbered.len()).sum(),
-    sec.paras.map(para => para.note.len()).sum(),
-  ).sum() != 0
   
-  if has_anno {
-    [【注释】<part>]
-  } else {
-    if i != 81 { pagebreak() }
-    continue
-  }
+  pad(y:1em, box(width: 37%, height:0.8pt, line(length: 100%, stroke: 0.8pt)))
 
   for (i, para) in sec.paras.enumerate(start: 1) {
 
-    let order = box($frac(#str(i), #str(sec.paras.len()))$, width: 1em, inset: 0pt)
+    pad(
+      left: 0.1em,
+      {
+        let order = box($frac(#str(i), #str(sec.paras.len()))$, width: 1em, inset: 0pt)
 
-    let processed_ancient = (
-      "#h(1em)",
-      para.ancient,
-      "#parbreak()"
-    ).join("")
+        // 译文
+        order + eval("#h(1em)"+para.translation+"#parbreak()", mode: "markup")
+        parbreak()
 
-    underline(
-      stroke: 0.6pt,
-      background: true,
-      evade: false,
-      offset: 0.3em,
+        if para.numbered.len() != 0 {
       
-      // 原文（【注释】中的）
-      order + eval(processed_ancient, mode: "markup")
-    )
+          let x_numbered = para.numbered.map(l => "#h(2em)" + l).join("#parbreak()")
     
-    parbreak()
+          // 注释
+          v(0.6em)
+          eval(x_numbered, mode: "markup")
+          v(0.6em)
+          parbreak()
+        }
 
-    if para.numbered.len() != 0 {
-      
-      let processed_numbered = para.numbered.map(
-        line => "#h(2em)" + line.replace("：", "#box(width:1em, [：])", count: 1)
-      ).join("#parbreak()") + "#parbreak()"
-
-      // 注释
-      eval(processed_numbered, mode: "markup")
-    }
-
-    if para.note.len() != 0 {
-      set text(fill: olive)
-      let processed_note = para.note.map(
-        line => "#h(2em)" + line
-      ).join("#parbreak()") + "#parbreak()"
-
-      // 笔记
-      eval(processed_note, mode: "markup")
-    }
+        if para.note.len() != 0 {
+          
+          set text(fill: olive)
+          let x_note = para.note.map(l => "#h(2em)"+l).join("#parbreak()")
     
+          // 笔记
+          if para.numbered.len() == 0 {v(0.6em)}
+          eval(x_note, mode: "markup") 
+          v(0.6em) 
+          parbreak()
+        }
+      }
+    )    
   }
   if i != 81 { pagebreak() }
 }      

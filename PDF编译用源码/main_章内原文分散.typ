@@ -1,6 +1,6 @@
 /** 
- * 文件：main_小段.typ
- * 输出：老子道德经：原文译文注释。以 段原文-段译文-段注释和笔记 形式输出。
+ * 文件：main_章内原文分散.typ
+ * 输出：老子道德经：原文译文注释。输出 章内原文分散型。
  * 引用关系：本文件读取了`数据.txt`，没有被别的文件调用。
  */
 
@@ -10,14 +10,25 @@
  * =======================================================
  */
 
+#let _解析字段_(content, tag) = {
+  
+  let pattern = regex("【" + tag + "】\[[^\]]+\]")
+  let match = content.find(pattern)
+  
+  if match == none { panic("未在`数据.txt`找到：【" + tag + "】") }
+  
+  match.trim("【" + tag + "】").trim("[").trim("]")
+}
+
 #let _文档信息解析结果_ = {
+  
   let txt_string = read("数据.txt")
+  
   (
-    title: txt_string.find(regex("【标题】\[[^\]]+\]")).trim("【标题】").trim("[").trim("]"),
-    author: txt_string.find(regex("【地址】\[[^\]]+\]")).trim("【地址】").trim("[").trim("]"),
-    description: txt_string.find(regex("【描述】\[[^\]]+\]")).trim("【描述】").trim("[").trim("]"),
-    keywords: txt_string.find(regex("【关键词】\[[^\]]+\]"))
-                        .trim("【关键词】").trim("[").trim("]").split("&").map(x => x.trim()),
+    title: _解析字段_(txt_string, "标题"),
+    author: _解析字段_(txt_string, "地址"),
+    description: _解析字段_(txt_string, "描述"),
+    keywords: _解析字段_(txt_string, "关键词").split("&").map(x => x.trim()),
   )
 }
 
