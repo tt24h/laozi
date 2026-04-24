@@ -62,6 +62,9 @@ body {
     margin: 1.5em 0;
 }
 
+.markdown-body li {
+    margin-bottom: 0.6em !important;
+}
 
 .markdown-body ol, 
 .markdown-body ul {
@@ -73,7 +76,22 @@ body {
 .markdown-body li > ul,
 .markdown-body li > ol {
     padding-left: 1.2em !important;
-    margin-top: 0.5em !important;
+    margin-top: 0.4em !important;
+    margin-bottom: 0.8em !important;
+}
+
+.markdown-body li > ul:last-child,
+.markdown-body li > ol:last-child {
+    margin-bottom: 0.4em !important;
+}
+
+.markdown-body li p {
+    margin-bottom: 0.4em !important;
+}
+
+.markdown-body li ul {
+    color: var(--quote-text-color) !important;
+    font-size: 0.95em;
 }
 
 
