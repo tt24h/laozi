@@ -4,19 +4,19 @@
 
 
 :root {
-    --bg-color: #303841;
-    --text-color: #D8DEE9;
-    --heading-color: #D8DEE9;
+    --bg-color: #faf9f5;
+    --text-color: #2b2621;
+    --heading-color: #1c1815;
 
 
-    --quote-bg-color: #262c33;
-    --quote-border-color: #4f5b66;
-    --quote-text-color: #D8DEE9;
+    --quote-bg-color: #f3ede5;
+    --quote-border-color: #d8cbbb;
+    --quote-text-color: #625950;
 
-    --border-color: #4f5b66;
-    --code-bg-color: #262c33;
-    --inline-code-bg-color: #3b444b;
-    --inline-code-color: #eeffff;
+    --code-border-color: #e9e2d8;
+    --code-bg-color: #fcfcfa;
+    --inline-code-bg-color: #f2eeea;
+    --inline-code-color: #b14a40;
 
     --font-body: "Anthropic Serif", Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", "Hiragino Sans GB", serif;
 }
@@ -83,12 +83,12 @@ body {
     background-color: var(--inline-code-bg-color);
     border-radius: 20px;
     padding: 0.1em 0.4em;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--code-border-color);
 }
 
 .markdown-body pre {
     background-color: var(--code-bg-color) !important;
-    border: 1px solid var(--border-color) !important;
+    border: 1px solid var(--code-border-color) !important;
     border-radius: 8px;
 }
 
