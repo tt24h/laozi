@@ -70,8 +70,17 @@ body {
 }
 
 
-.markdown-body ol, .markdown-body ul {
-    padding-left: 2rem;
+.markdown-body ol, 
+.markdown-body ul {
+    padding-left: 1.2em !important;
+    margin-left: 0 !important;
+}
+
+
+.markdown-body li > ul,
+.markdown-body li > ol {
+    padding-left: 1.2em !important;
+    margin-top: 0.5em !important;
 }
 
 
