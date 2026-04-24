@@ -18,6 +18,27 @@
     --font-body: "Anthropic Serif", Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", "Hiragino Sans GB", serif;
 }
 
+// 夜间主题。 
+html:has(.task-list-item-checkbox:checked) {
+    --bg-color: #1e1e1e !important;
+    --text-color: #d1d1d1 !important;
+    --heading-color: #e0e0e0 !important;
+    --accent-color: #d68759 !important;
+    --quote-bg-color: #2a2a2a !important;
+    --quote-border-color: #444444 !important;
+    --quote-text-color: #aaaaaa !important;
+    --border-color: #3d3d3d !important;
+    --inline-code-bg-color: #2d2d2d !important;
+    --code-bg-color: #252525 !important;
+}
+
+
+html:has(.task-list-item-checkbox:checked) body,
+html:has(.task-list-item-checkbox:checked) .markdown-body {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+}
+
 
 .container-lg.markdown-body > h1:first-child {
     display: none !important;
@@ -107,3 +128,4 @@ body {
     border-radius: 0 !important;
     vertical-align: baseline !important;
 }
+
