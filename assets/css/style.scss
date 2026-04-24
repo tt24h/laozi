@@ -62,14 +62,14 @@ body {
 
 .markdown-body ol, 
 .markdown-body ul {
-    padding-left: 1em !important;
+    padding-left: 1.2em !important;
     margin-left: 0 !important;
 }
 
 
 .markdown-body li > ul,
 .markdown-body li > ol {
-    padding-left: 1em !important;
+    padding-left: 1.2em !important;
     margin-top: 0.5em !important;
 }
 
@@ -95,8 +95,7 @@ body {
     color: var(--text-color) !important;
 }
 
-.highlighter-rouge, 
-code.language-plaintext {
+.highlighter-rouge, code.language-plaintext {
     background-color: transparent !important; 
     border: none !important;
     padding: 0 !important;
