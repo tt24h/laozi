@@ -12,22 +12,12 @@
         #targetText { background-color: #f9f9f9; color: #333; }
         .hint { color: #555; font-size: 14px; padding: 8px 25px; border: 1px solid #ccc; border-radius: 50px;}
 
-        .selector-group { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #444; }
-        select { padding: 5px 10px; border-radius: 4px; border: 1px solid #ccc; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="hint">💡 全选 `数据.txt` 中的内容，粘贴至下方文本框，将自动实时显示Markdown文本。</div>
-
-        <div class="selector-group">
-            <label for="modeSelect">选择生成模板：</label>
-            <select id="modeSelect">
-                <option value="原文分散排版">章内原文分散</option>
-                <option value="原文分散集中">章内原文集中</option>
-            </select>
-        </div>
 
         <textarea id="sourceText" class="item" placeholder="将`数据.txt`的内容粘贴至此."></textarea>
         <textarea id="targetText" class="item" placeholder="生成的Markdown文本将实时显示在这里。" readonly></textarea>
@@ -37,7 +27,6 @@
 
         const sourceInput = document.getElementById('sourceText');
         const targetInput = document.getElementById('targetText');
-        const modeSelect = document.getElementById('modeSelect');
 
         const updateOutput = () => {
             const { value } = sourceInput;
@@ -50,8 +39,6 @@
         };
 
         sourceInput.addEventListener('input', updateOutput);
-
-        modeSelect.addEventListener('change', updateOutput);
 
         window.onload = updateOutput;
 
@@ -71,7 +58,7 @@
         // --- 1. 解析内容结构 ---
         function parseRawData(text) {
             let result = [];
-            const lines = text.split('\n').map(l => l.trim());
+            const lines = text.split('\n').map(l => l.trim()).map(l => l.replaceAll('|', '\\|'));
 
             for (let ln of lines) {
                 if (ln === "" || ln.startsWith("//")) continue;
@@ -123,73 +110,99 @@
 仓库地址：${docInfo.author}
 使用协议：CC0 1.0
 
-* 本文的 Markdown 版、 PDF 版的数据源：\`./PDF编译用源码/数据.txt\`
-* 仓库内有字典工具的介绍等。`;
+* 本文的 Markdown 版、PDF 版的数据源：\`./PDF编译用源码/数据.txt\`
+* 仓库内有字典工具的介绍、《老子道德经：四种原文表》等。`;
         }
 
 
         // --- 3. 生成 Markdown 代码 ---
-        function renderMarkdown(sections, docInfo, mode) {
+        function renderMarkdown(sections, docInfo) {
 
-            const title = `老子道德经：原文译文注释\n======\n`
+            const github_pages_css = `---
+layout: default
+---`;
+
+            const title = `\n老子道德经：原文译文注释\n======\n`
             
-            let header = title + `\`\`\`less\n${getCommonMetaText(docInfo)}\n\`\`\`\n\n&nbsp;\n\n`;
+            let header = github_pages_css + 
+                         title + `\`\`\`less
+${getCommonMetaText(docInfo)}\n\`\`\`
+
+&nbsp;
+
+本文包含两遍81章：
+
+* 第一遍：整章原文置于章首，其后罗列该章各段译文及其注释。
+* 第二遍：章内各段原文后紧跟其译文及注释。
+
+&nbsp;
+
+`;
             
-            let body = sections.map((sec, s) => {
+            // 第一遍， 章内原文在章首
+            let body = '## 第一遍\n\n&nbsp;\n\n';
+
+            body += sections.map((sec, s) => {
 
                 let md = `### ${sec.title}\n\n&nbsp;\n\n`;
 
-                // 章内原文分散
-                if (mode === '原文分散排版')  {
+                md += sec.paras.map(p => p.ancient).join('\n\n') + "\n\n&nbsp;\n\n";
 
-                    sec.paras.forEach((p, i) => {
+                sec.paras.forEach((p, i) => {
 
-                        const isLastPara = (i === sec.paras.length - 1);
-                        
-                        md += `${p.ancient}\n\n\`\`\`less\n${p.translation}\n`;
+                    const index = i + 1;
+                    const isLastPara = (i === sec.paras.length - 1)
 
-                        const numbered_str = p.numbered.map(item => item.replace('@', '•').replace('*', '').replace('*', '')).join('\n');
+                    md += `${index}. ${p.translation}\n`;
 
-                        if (p.numbered.length) md += `\n${numbered_str}\n`;
-                        
-                        if (p.note.length) md += `\nnote:\n${p.note.map(n => `　　${n}`).join('\n')}\n`;
-                        
-                        md += `\`\`\``;
-                        md += isLastPara ? `` : `\n\n`;
-                    });
+                    if (p.numbered.length) {
+
+                        const isEndOfSection = isLastPara && p.note.length === 0;
+
+                        md += '\n' + p.numbered.map(anno => {
+
+                            const  cleanAnno = anno.replace('*', '').replace('*', '').replace('@', '');
+                            return `    - ${cleanAnno}`
+
+                        }).join('\n') + (isEndOfSection ? '\n' : '\n\n');
+
+                    };
+
+                    if (p.note.length) {
+
+                        md += (p.numbered.length ? '' : '\n') +
+                               p.note.map(line => `    > ${line}`).join("\n    >\n") +
+                              (isLastPara ? '\n' : '\n\n');
+                    };
+                });
+
+                return md;
+            }).map(x => x.trim('\n')).join('\n\n&nbsp;\n\n');
 
 
-                // 章内原文集中 
-                } else {
+            // 第二遍， 各段原文后紧跟译文等
+            body += '\n\n&nbsp;\n\n## 第二遍\n\n&nbsp;\n\n';
 
-                    md += sec.paras.map(p => p.ancient).join('\n\n') + "\n\n&nbsp;\n\n";
+            body += sections.map((sec, s) => {
 
-                    sec.paras.forEach((p, i) => {
+                let md = `### ${s + 1}\n\n&nbsp;\n\n`;
 
-                        const index = i + 1;
-                        const isLastPara = (i === sec.paras.length - 1)
+                sec.paras.forEach((p, i) => {
 
-                        md += `${index}. ${p.translation}\n`;
+                    const isLastPara = (i === sec.paras.length - 1);
+                    
+                    md += `${p.ancient}\n\n\`\`\`less\n${p.translation}\n`;
 
-                        if (p.numbered.length) {
+                    const numbered_str = p.numbered.map(item => item.replace('@', '•').replace('*', '').replace('*', '')).join('\n');
 
-                            const isEndOfSection = isLastPara && p.note.length === 0;
-
-                            md += '\n' + p.numbered.map(anno => {
-
-                                const  cleanAnno = anno.replace('*', '').replace('*', '').replace('@', '');
-                                return `\t - ${cleanAnno}`
-
-                            }).join('\n') + (isEndOfSection ? '\n' : '\n\n');
-
-                        };
-
-                        if (p.note.length) {
-
-                            md += (p.numbered.length ? '' : '\n') + p.note.map(line => `> ${line}`).join("\n>\n") + (isLastPara ? '\n' : '\n\n');
-                        };
-                    });
-                }
+                    if (p.numbered.length) md += `\n${numbered_str}\n`;
+                    
+                    if (p.note.length) md += `\nnote:\n${p.note.map(n => `　　${n}`).join('\n')}\n`;
+                    
+                    md += `\`\`\``;
+                    md += isLastPara ? `` : `\n\n`;
+                });
+   
 
                 return md;
             }).map(x => x.trim('\n')).join('\n\n&nbsp;\n\n');
@@ -201,7 +214,7 @@
         function processContent(text) {
             const sections = parseRawData(text);
             const docInfo = extractDocInfo(text);
-            return  renderMarkdown(sections, docInfo, modeSelect.value)
+            return  renderMarkdown(sections, docInfo)
         }
     </script>
 </body>
