@@ -124,7 +124,7 @@
 使用协议：CC0 1.0
 
 * 本文的 Markdown 版、 PDF 版的数据源：\`./PDF编译用源码/数据.txt\`
-* 本文各版均有两种排版逻辑：章内原文集中、章内原文分散，详见仓库。仓库内还有字典介绍等。`;
+* Markdown 版提供两个文件下载，差别在排版逻辑：章内原文集中排版、章内原文分散排版，详见仓库。仓库内还有字典工具的介绍等。`;
         }
 
 
@@ -147,8 +147,13 @@
                         const isLastPara = (i === sec.paras.length - 1);
                         
                         md += `${p.ancient}\n\n\`\`\`less\n${p.translation}\n`;
-                        if (p.numbered.length) md += `\n${p.numbered.join('\n')}\n`;
+
+                        const numbered_str = p.numbered.map(item => item.replace('@', '•').replace('*', '').replace('*', '')).join('\n');
+
+                        if (p.numbered.length) md += `\n${numbered_str}\n`;
+                        
                         if (p.note.length) md += `\nnote:\n${p.note.map(n => `　　${n}`).join('\n')}\n`;
+                        
                         md += `\`\`\``;
                         md += isLastPara ? `` : `\n\n`;
                     });

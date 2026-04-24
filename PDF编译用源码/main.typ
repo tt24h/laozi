@@ -131,7 +131,7 @@
     }
 )
 
-#set strong(delta: 200)
+#set strong(delta: 0)
 #set math.frac(style: "skewed")
 
 #show raw: set text(font:"Noto Sans CJK SC")
@@ -166,13 +166,13 @@
   
   #h(2em);使用王弼本分章方案，配有译文注释和笔记。注释以文义理解为主，不包含大量字典释义。在本文仓库内有：字典与字典工具的介绍文档，本文的 Markdown 版，生成本 PDF 文件的 Typst 格式源码。\
 
-  #h(2em);Markdown版的排版逻辑与本PDF不同，是：章标题 → 一段原文及相应译文注释等 → 下一段原文及相应译文注释等 → … → 下章标题。
+  #h(2em);Markdown版提供两个文件下载，差别在排版逻辑：章内原文集中排版、章内原文分散排版。章内原文集中排版和本PDF排版逻辑一致，章内原文分散排版则是，章标题 → 一段原文及其译文注释等 → 一段原文及其译文注释等 → … → 章标题。每段原文紧挨其译文，方便对照阅读。
   
-  #h(2em);*注意*：仅在编写期间，笔者对文义的理解就经历了多次转变，不排除以后还会推翻文中的观点。故本文仅供参考。\
+  #h(2em);*注意*：仅在编写期间，笔者对文义的理解就经历了多次转变，不排除以后还会推翻文中的观点。本文仅供参考。\
   
   #table(
     columns: 2, stroke: none, inset: (x:2em, y:0.65em),
-    [本文], [#h(-3em)→#h(1em);https://github.com/tt24h/laozi],
+    [本文 仓库], [#h(-3em)→#h(1em);https://github.com/tt24h/laozi],
     [老子道德经：四种原文表], [#h(-3em)→#h(1em);https://github.com/tt24h/daodejing]
   )
   #h(2em);本文内容使用 CC0 1.0 协议发布。
@@ -203,7 +203,7 @@
   for (i, para) in sec.paras.enumerate(start: 1) {
 
     pad(
-      left: 0.1em,
+      left: 0.2em,
       {
         let order = box($frac(#str(i), #str(sec.paras.len()))$, width: 1em, inset: 0pt)
 
