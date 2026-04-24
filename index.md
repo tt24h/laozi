@@ -15,6 +15,8 @@ layout: default
 * 仓库内有字典工具的介绍等。
 ```
 
+- [ ] 深色主题（仅供 Github Pages 生成网页用，可删除）
+
 &nbsp;
 
 ### 一章
