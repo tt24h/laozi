@@ -131,7 +131,7 @@
     }
 )
 
-#set strong(delta: 0)
+#set strong(delta: 200)
 #set math.frac(style: "skewed")
 
 #show raw: set text(font:"Noto Sans CJK SC")
@@ -165,8 +165,6 @@
   #h(2em);本文原文部分来自《老子道德经：四种原文表》中的各表首行文本。各表首行文本校订自王弼本、帛书本、郭简本及北大本，优先选用古早版本的文本，例外少。\
   
   #h(2em);使用王弼本分章方案，配有译文注释和笔记。注释以文义理解为主，不包含大量字典释义。在本文仓库内有：字典与字典工具的介绍文档，本文的 Markdown 版，生成本 PDF 文件的 Typst 格式源码。\
-
-  #h(2em);Markdown版提供两个文件下载，差别在排版逻辑：章内原文集中排版、章内原文分散排版。章内原文集中排版和本PDF排版逻辑一致，章内原文分散排版则是，章标题 → 一段原文及其译文注释等 → 一段原文及其译文注释等 → … → 章标题。每段原文紧挨其译文，方便对照阅读。
   
   #h(2em);*注意*：仅在编写期间，笔者对文义的理解就经历了多次转变，不排除以后还会推翻文中的观点。本文仅供参考。\
   
@@ -198,7 +196,7 @@
     parbreak()
   }
   
-  pad(y:1em, box(width: 37%, height:0.8pt, line(length: 100%, stroke: 0.8pt)))
+  pad(y:1em, align(center, "*  *  *  *  *  *  *  *  *  *") )
 
   for (i, para) in sec.paras.enumerate(start: 1) {
 
