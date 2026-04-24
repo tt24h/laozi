@@ -16,20 +16,15 @@
 
 提供 Markdown 和 PDF **两个版本**，使用同个数据源生成，内容一致。
 
-* **Markdown 版**：[查看原文集中](./原文集中.md)｜[查看原文分散](./index.md)
+* **Markdown 版**：[查看文件](./原文集中.md)｜[浏览网页](https://tt24h.github.io/laozi/)
+   * 文件：`./index.md`。
 
-   * 原文集中的文件：`./原文集中.md`，整章原文置于章标题下。
-   * 原文分散的文件：`./index.md` ，每段原文紧挨其译文注释等。 [浏览基于此的网页](https://tt24h.github.io/laozi/)。
-   * 两个文件内容一致，排版逻辑不同。
-   
 * **PDF 版**：[下载PDF](https://github.com/tt24h/laozi/releases/latest/download/laozi.pdf)
-  
    * 文件：Releases → `laozi.pdf`
-   * 使用 原文集中 排版。在 工具/ 内有 编辑、编译 pdf 的指南。
-   
-* **数据源**：[查看](./PDF编译用源码/数据.txt)
-
+   * 在 工具/ 内有 编辑、编译 pdf 的指南。
+* **数据源**：[查看文件](./PDF编译用源码/数据.txt)
    * 文件：`./PDF编译用源码/数据.txt`
+
 
 
 ### 使用协议：

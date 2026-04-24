@@ -24,8 +24,8 @@
         <div class="selector-group">
             <label for="modeSelect">选择生成模板：</label>
             <select id="modeSelect">
-                <option value="default">章内原文分散</option>
-                <option value="one">章内原文集中</option>
+                <option value="原文分散排版">章内原文分散</option>
+                <option value="原文分散集中">章内原文集中</option>
             </select>
         </div>
 
@@ -124,7 +124,7 @@
 使用协议：CC0 1.0
 
 * 本文的 Markdown 版、 PDF 版的数据源：\`./PDF编译用源码/数据.txt\`
-* Markdown 版提供两个文件下载，差别在排版逻辑：章内原文集中排版、章内原文分散排版，详见仓库。仓库内还有字典工具的介绍等。`;
+* 仓库内有字典工具的介绍等。`;
         }
 
 
@@ -140,7 +140,7 @@
                 let md = `### ${sec.title}\n\n&nbsp;\n\n`;
 
                 // 章内原文分散
-                if (mode === 'default')  {
+                if (mode === '原文分散排版')  {
 
                     sec.paras.forEach((p, i) => {
 
