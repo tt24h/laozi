@@ -20,3 +20,7 @@ blockquote {
 h1, h2, h3 {
     color: #5d4037;
 }
+
+.container-lg.markdown-body > h1:first-child {
+    display: none;
+}
