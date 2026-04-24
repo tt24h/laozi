@@ -6,14 +6,18 @@
 :root {
     --bg-color: #303841;
     --text-color: #D8DEE9;
-    --heading-color: #1c1815;
-    --quote-bg-color: #f3ede5;
-    --quote-border-color: #d8cbbb;
-    --quote-text-color: #625950;
-    --border-color: #ddd5ca;
-    --inline-code-color: #b14a40;
-    --inline-code-bg-color: #f2eeea;
-    --code-bg-color: #fcfcfa;
+    --heading-color: #D8DEE9;
+
+
+    --quote-bg-color: #3b444b;
+    --quote-border-color: #4f5b66;
+    --quote-text-color: #9eb1c1;
+
+    --border-color: #4f5b66;
+    --code-bg-color: #262c33;
+    --inline-code-bg-color: #3b444b;
+    --inline-code-color: #eeffff;
+
     --font-body: "Anthropic Serif", Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", "Hiragino Sans GB", serif;
 }
 
