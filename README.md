@@ -12,15 +12,17 @@
 
 ### 阅读、下载：
 
-本文有 Markdown 和 PDF **两个版本**，两个版本由同个数据源生成，但是排版逻辑不一样。
+本文有 Markdown 和 PDF **两个版本**，使用同个数据源生成，内容一致，但是排版逻辑不一样。
 
 * **Markdown 版**：[查看文件](./index.md)｜[浏览网页](https://tt24h.github.io/laozi/)
+
    * 文件：`./index.md`
    * 章内原文分散：章标题 → 一段原文及相应译文注释等 → 下一段原文及相应译文注释等 → … → 下章标题。
    * 可使用 工具/ 内的 网页，自助生成 章内原文集中型 文档。
    
 * **PDF 版**：[下载PDF](https://github.com/tt24h/laozi/releases/latest/download/laozi.pdf)
-  * 文件：Releases → `laozi.pdf`
+   
+   * 文件：Releases → `laozi.pdf`
    * 章内原文集中：章标题 → 整章原文 → 一段译文及相应注释等 → 下一段译文及相应注释等 → … → 下章标题。
    * 在 工具/ 内有 编辑、编译 pdf 的指南。可根据指南 自助生成 章内原文分散型 文档。
    
