@@ -2,6 +2,12 @@
 ---
 @import "{{ site.theme }}";
 
+/* 点击标题后平滑滚动。
+html {
+    scroll-behavior: smooth;
+}
+*/
+
 html, :root {
 
     font-size: 18px;
