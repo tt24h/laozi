@@ -114,7 +114,6 @@
 * 仓库内有字典工具的介绍、《老子道德经：四种原文表》等。`;
         }
 
-
         // --- 3. 生成 Markdown 代码 ---
         function renderMarkdown(sections, docInfo) {
 
@@ -132,19 +131,20 @@ ${getCommonMetaText(docInfo)}\n\`\`\`
 
 本文包含两遍81章：
 
-* 第一遍：整章原文置于章首，其后罗列该章各段译文及其注释。
-* 第二遍：章内各段原文后紧跟其译文及注释。
+* 第1遍：整章原文置于章首，其后罗列该章各段译文及其注释。
+* 第2遍：章内各段原文后紧跟其译文及注释。
+* 点击章标题，可在两种排版之间跳转。
 
 &nbsp;
 
 `;
             
-            // 第一遍， 章内原文在章首
-            let body = '## 第一遍\n\n&nbsp;\n\n';
+            // 第1遍， 章内原文在章首
+            let body = '## [第1遍](#第2遍)\n\n&nbsp;\n\n';
 
             body += sections.map((sec, s) => {
 
-                let md = `### ${sec.title}\n\n&nbsp;\n\n`;
+                let md = `### [${sec.title}](#chapter-${s + 1})\n\n&nbsp;\n\n`;
 
                 md += sec.paras.map(p => p.ancient).join('\n\n') + "\n\n&nbsp;\n\n";
 
@@ -180,12 +180,12 @@ ${getCommonMetaText(docInfo)}\n\`\`\`
             }).map(x => x.trim('\n')).join('\n\n&nbsp;\n\n');
 
 
-            // 第二遍， 各段原文后紧跟译文等
-            body += '\n\n&nbsp;\n\n## 第二遍\n\n&nbsp;\n\n';
+            // 第2遍， 各段原文后紧跟译文等
+            body += '\n\n&nbsp;\n\n## [第2遍](#第1遍)\n\n&nbsp;\n\n';
 
             body += sections.map((sec, s) => {
 
-                let md = `### ${s + 1}\n\n&nbsp;\n\n`;
+                let md = `### [chapter-${s + 1}](#${sec.title})\n\n&nbsp;\n\n`;
 
                 sec.paras.forEach((p, i) => {
 
@@ -202,7 +202,6 @@ ${getCommonMetaText(docInfo)}\n\`\`\`
                     md += `\`\`\``;
                     md += isLastPara ? `` : `\n\n`;
                 });
-   
 
                 return md;
             }).map(x => x.trim('\n')).join('\n\n&nbsp;\n\n');
