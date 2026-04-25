@@ -45,6 +45,7 @@ body {
     background-color: var(--bg-color) !important;
 }
 
+
 .markdown-body h1, .markdown-body h2, .markdown-body h3 {
     color: var(--heading-color);
     font-weight: 600;
@@ -77,14 +78,15 @@ body {
     padding: 0 !important;
 }
 
-.markdown-body blockquote {
-    font-size:0.95em;
-    border-left: 2px solid var(--quote-border-color) !important;
-    background-color: var(--quote-bg-color) !important;
-    color: var(--quote-text-color) !important;
-    padding: 0.55rem 1rem !important;
-    border-radius: 10px;
-    margin: 1.5em 0;
+
+.markdown-body p {
+    line-height: 1.65 !important;
+    margin-bottom: 1.2em !important; 
+}
+
+
+.markdown-body > p {
+    letter-spacing: 0.02em; 
 }
 
 .markdown-body ol, 
@@ -105,10 +107,23 @@ body {
 
 .markdown-body li p {
     margin-bottom: 0.4em !important;
+    line-height: 1.65 !important;
+    margin-top: 0.4em !important;
+    margin-bottom: 0.6em !important;
 }
 
 .markdown-body li > :last-child {
     margin-bottom: 0 !important;
+}
+
+.markdown-body blockquote {
+    font-size:0.95em;
+    border-left: 2px solid var(--quote-border-color) !important;
+    background-color: var(--quote-bg-color) !important;
+    color: var(--quote-text-color) !important;
+    padding: 0.55rem 1rem !important;
+    border-radius: 10px;
+    margin: 1.5em 0;
 }
 
 .markdown-body code {
