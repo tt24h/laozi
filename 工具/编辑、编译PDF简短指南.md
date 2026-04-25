@@ -6,7 +6,7 @@
 
 搭建好环境后，用 vscode 打开本地的「PDF编译用源码/」内的 `main.typ` ，完成。
 
-可能还需要安装 Noto Serif CJK SC、Noto Sans CJK SC 这两款字体。或者修改代码，使用本地已安装的其他字体。
+可能还需要安装 Noto Serif CJK SC、Noto Sans CJK SC 等字体。或者修改代码，使用本地已安装的其他字体。
 
 ### 2. 在线编译
 
@@ -24,7 +24,6 @@
 数据.txt
 main_纯原文.typ
 main_统计.typ
-main_章内原文分散.typ
 main.typ 👁
 ```
 
