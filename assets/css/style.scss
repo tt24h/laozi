@@ -43,7 +43,7 @@ html, :root {
     background-color: var(--bg-color) !important;
     color: var(--text-color) !important;
     font-family: var(--font-body) !important;
-    line-height: 1.65 !important;
+    line-height: 1.7 !important;
     font-size: 18px !important;
 }
 
@@ -108,7 +108,7 @@ body {
 
 .markdown-body li > ul {
     margin: 0.4em 0 0.8em !important;
-    font-size: 0.95em;
+    font-size: 1em;
     color: var(--quote-text-color);
 }
 
@@ -124,7 +124,7 @@ body {
 }
 
 .markdown-body blockquote {
-    font-size:0.95em;
+    font-size:1em;
     border-left: 2px solid var(--quote-border-color) !important;
     background-color: var(--quote-bg-color) !important;
     color: var(--quote-text-color) !important;
@@ -134,7 +134,7 @@ body {
 }
 
 .markdown-body code {
-    font-size: 0.95em;
+    font-size: 1em;
     color: var(--inline-code-color);
     background-color: var(--inline-code-bg-color);
     font-family: var(--font-body);
@@ -169,7 +169,7 @@ code.language-plaintext {
     font-family: var(--font-body);
 
     font-size: 0.9em !important;    
-    line-height: 1.65 !important;
+    line-height: 1.7 !important;
 }
 
 .markdown-body pre > code {
