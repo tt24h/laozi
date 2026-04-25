@@ -49,7 +49,8 @@ body {
 .markdown-body h1, .markdown-body h2, .markdown-body h3 {
     color: var(--heading-color);
     font-weight: 600;
-    border-bottom: none; 
+    border-bottom: none;
+    scroll-margin-top: 3rem !important;
 }
 
 .markdown-body h1, .markdown-body h3 {
