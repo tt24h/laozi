@@ -14,7 +14,6 @@
   
   let pattern = regex("【" + tag + "】\[[^\]]+\]")
   let match = content.find(pattern)
-  
   if match == none { panic("未在`数据.txt`找到：【" + tag + "】") }
   
   match.trim("【" + tag + "】").trim("[").trim("]")
@@ -109,23 +108,15 @@
   leading:1.3em,
 )
 
-#let logic-page = counter("logic-page")
-#let cycle-string = state("cycle-string", "第1遍")
-
-#let extract-text(it) = {
-  if type(it) == str { it }
-  else if it.has("text") { it.text }
-  else if it.has("body") { extract-text(it.body) }
-  else if it.has("children") { it.children.map(extract-text).join() }
-  else { "" }
-}
+#let logic-page = counter("logic-page") // 遍中的页数
+#let cycle-string = state("cycle-string", "第1遍") // 记录第几遍。
+#let cur-chapter = state("cur-chapter","") // 记录顶部章节名称。
 
 #set page(
   paper:"a4", 
   margin:(x:2.9cm, y:3.3cm), 
   numbering: "1",
   header: context {
-
       let last_section = none
       let curr-page = here().page()  
       let headings = query(heading.where(level: 2))
@@ -134,26 +125,26 @@
       if on-page.len() > 0 {
         last_section = none
       } else {
-        
         let before = headings.filter(h => h.location().page() < curr-page)
-
+        
         if before.len() > 0 {
-          let target = before.last()
-          last_section = extract-text(target.body)
+          last_section = cur-chapter.get()
         }
       }
       
       let cur-logic = logic-page.get().at(0)
       let cur-abs = counter(page).get().at(0)
 
+      set text(size:0.8em)
       grid(
         inset:0pt,
         align:(left,center, right),
         columns:(0.5fr,1fr, 0.5fr),
         [#cycle-string.get()],
-        [#if last_section != none{[（ #last_section ）]}else{"老子道德经：原文译文注释"}],
+        [#if last_section != none{[#last_section]}else{"老子道德经：原文译文注释"}],
         [#cur-logic;],
       )
+      
       move(dy:-0.5em,line(length:100%, stroke:0.5pt))
     },
 
@@ -161,6 +152,12 @@
       logic-page.step()
       none
     },
+
+    footer: context [
+      #set align(center)
+      #set text(size: 0.8em)
+      #counter(page).display()
+    ]
 )
 
 #set strong(delta: 200)
@@ -217,10 +214,9 @@
 
 
 
-#let main = [ // 这样，两种标题互相建立连接不会有 找不到标签的冲突。
+#let main = [ // ← 不直接打印的好处，两种标题互相建立链接，不会有找不到标签的冲突。
 
   /* 正文页 第1遍，章内原文在章首 ::::::::::::::: */
-  
   #[
   #set page(margin:(y:-100pt))
   #v(1fr)
@@ -236,7 +232,9 @@
     let dest_v2 = label("v2|"+str(i))
     
     [#link(dest_v2,[== #sec.title #this_v1])]
-     
+
+    cur-chapter.update(sec.title)
+    
     let x_ancient = sec.paras
         .map(para => "#h(2em)" + para.ancient).join("#parbreak()")
         
@@ -302,16 +300,18 @@
     #logic-page.update(1)
   ]
   #pagebreak()
-  
+
+  #set strong(delta: 0)
+  #show strong: set text(font:"Noto Sans CJK SC")
   
   #for (i, sec) in _内容解析结果_.enumerate(start: 1) {
       
     // 章标题
     let dest_v1 = label("v1|" + str(i))
     let this_v2 = label("v2|" + str(i))
-    
     [== #link(dest_v1)[#text(font:"Crimson Pro","chapter-" + str(i))] #this_v2]
-  
+    cur-chapter.update("chapter-" + str(i))
+    
     for (i, para) in sec.paras.enumerate(start: 1) {
   
       {
