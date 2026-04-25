@@ -117,6 +117,7 @@
   margin:(x:2.9cm, y:3.3cm), 
   numbering: "1",
   header: context {
+    
       let last_section = none
       let curr-page = here().page()  
       let headings = query(heading.where(level: 2))
@@ -214,14 +215,14 @@
 
 
 
-#let main = [ // ← 不直接打印的好处，两种标题互相建立链接，不会有找不到标签的冲突。
+#let main = [ // ← 先存在main的好处，两种标题互相建立链接，不会因为踢皮球而报错。
 
   /* 正文页 第1遍，章内原文在章首 ::::::::::::::: */
   #[
-  #set page(margin:(y:-100pt))
-  #v(1fr)
-  #[= #link(label("v2"), "第1遍") #label("v1")]
-  #v(1fr)
+    #set page(margin:(y:-100pt))
+    #v(1fr)
+    #[= #link(label("v2"), "第1遍") #label("v1")]
+    #v(1fr)
   ]
   #pagebreak()
   
@@ -292,12 +293,12 @@
   /* 正文页 第2遍，各段原文后紧跟译文等 ::::::::::::::: */
   
   #[
-    #set page(margin:(y:-100pt))
-    #v(1fr)
-    #[= #link(label("v1"), "第2遍") #label("v2")]
-    #v(1fr)
-    #cycle-string.update("第2遍")
-    #logic-page.update(1)
+      #set page(margin:(y:-100pt))
+      #v(1fr)
+      #[= #link(label("v1"), "第2遍") #label("v2")]
+      #v(1fr)
+      #cycle-string.update("第2遍")
+      #logic-page.update(1)
   ]
   #pagebreak()
 
@@ -309,7 +310,7 @@
     // 章标题
     let dest_v1 = label("v1|" + str(i))
     let this_v2 = label("v2|" + str(i))
-    [== #link(dest_v1)[#text(font:"Crimson Pro","chapter-" + str(i))] #this_v2]
+    [== #link(dest_v1)[#text("chapter-" + str(i),font:"JuliaMono")] #this_v2]
     cur-chapter.update("chapter-" + str(i))
     
     for (i, para) in sec.paras.enumerate(start: 1) {
@@ -355,8 +356,3 @@
 ]
 
 #main
-
-
-
-
-
