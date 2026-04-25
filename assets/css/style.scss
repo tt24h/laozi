@@ -139,6 +139,12 @@ body {
     margin: 1rem 0;
 }
 
+.markdown-body blockquote > p {
+    margin: 0 !important;  // 清除 blockquote 内 p 的所有 margin
+    padding: 0 !important;
+}
+
+
 .markdown-body code {
     font-size: 1em;
     color: var(--inline-code-color);
