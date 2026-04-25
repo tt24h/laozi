@@ -14,7 +14,6 @@
   
   let pattern = regex("【" + tag + "】\[[^\]]+\]")
   let match = content.find(pattern)
-  
   if match == none { panic("未在`数据.txt`找到：【" + tag + "】") }
   
   match.trim("【" + tag + "】").trim("[").trim("]")
