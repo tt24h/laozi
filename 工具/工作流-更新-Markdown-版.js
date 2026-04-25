@@ -10,10 +10,10 @@ const path = require('path');
 const SOURCE_PATH     = path.join(process.cwd(), 'PDF编译用源码', '数据.txt');
 const TARGET_MD       = path.join(process.cwd(), 'index.md');
 
-        // --- 1. 解析内容结构 ---
+         // --- 1. 解析内容结构 ---
         function parseRawData(text) {
             let result = [];
-            const lines = text.split('\n').map(l => l.trim()).map(l => l.replaceAll('|', '\\|'));
+            const lines = text.split('\n').map(l => l.trim());
 
             for (let ln of lines) {
                 if (ln === "" || ln.startsWith("//")) continue;
@@ -95,6 +95,7 @@ ${getCommonMetaText(docInfo)}\n\`\`\`
 `;
             
             // 第1遍， 章内原文在章首
+
             let body = '## [第1遍](#第2遍)\n\n&nbsp;\n\n';
 
             body += sections.map((sec, s) => {
@@ -108,7 +109,7 @@ ${getCommonMetaText(docInfo)}\n\`\`\`
                     const index = i + 1;
                     const isLastPara = (i === sec.paras.length - 1)
 
-                    md += `${index}. ${p.translation}\n`;
+                    md += `${index}. ${p.translation.replaceAll('|', '\\|')}\n`;
 
                     if (p.numbered.length) {
 
@@ -116,7 +117,9 @@ ${getCommonMetaText(docInfo)}\n\`\`\`
 
                         md += '\n' + p.numbered.map(anno => {
 
-                            const  cleanAnno = anno.replace('*', '').replace('*', '').replace('@', '');
+                            const cleanAnno = anno.replace('*', '').replace('*', '')
+                                    .replace('@', '').replaceAll('|', '\\|');
+
                             return `    - ${cleanAnno}`
 
                         }).join('\n') + (isEndOfSection ? '\n' : '\n\n');
@@ -126,7 +129,7 @@ ${getCommonMetaText(docInfo)}\n\`\`\`
                     if (p.note.length) {
 
                         md += (p.numbered.length ? '' : '\n') +
-                               p.note.map(line => `    > ${line}`).join("\n    >\n") +
+                               p.note.map(line => `    > ${line.replaceAll('|', '\\|')}`).join("\n    >\n") +
                               (isLastPara ? '\n' : '\n\n');
                     };
                 });
