@@ -160,11 +160,15 @@ code.language-plaintext {
     overflow-x: auto !important; /* 允许左右滑动 */
     margin: 1em 0;
     font-family: var(--font-body);
+
+    font-size: 0.9em !important;    
+    line-height: 1.65 !important;
 }
 
 .markdown-body pre > code {
     white-space: pre !important; 
     display: block;
+    line-height: inherit !important;
     -webkit-overflow-scrolling: touch;
 }
 
