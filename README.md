@@ -17,16 +17,16 @@
 提供 Markdown 和 PDF **两个版本**，使用同个数据源生成，内容一致。
 
 * **Markdown 版**：[查看文件](./index.md)｜[浏览网页](https://tt24h.github.io/laozi/)
-
+   
    * 文件：`./index.md`
 
 * **PDF 版**：[下载PDF](https://github.com/tt24h/laozi/releases/latest/download/laozi.pdf)
-
+   
    * 文件：Releases → `laozi.pdf`
    * 在 工具/ 内有 编辑、编译 pdf 的指南。
-
+   * 
 * **数据源**：[查看文件](./PDF编译用源码/数据.txt)
-
+* 
    * 文件：`./PDF编译用源码/数据.txt`
 
 ### 使用协议：
