@@ -85,12 +85,10 @@ body {
     padding: 0 !important;
 }
 
-
 .markdown-body p {
     line-height: 1.7 !important;
     margin-bottom: 1.2em !important; 
 }
-
 
 .markdown-body > p {
     letter-spacing: 0.02em; 
@@ -103,25 +101,33 @@ body {
 }
 
 .markdown-body li {
-    margin-bottom: 0.6em !important;
+    margin-bottom: 0.4em !important; // 0.4 圆点列表项之间的留白。
 }
 
-.markdown-body li > ul {
-    margin: 0.4em 0 0.8em !important;
+.markdown-body ol > li {
+    margin-bottom: 0.8em !important;  // 0.8em 数字列表项之间的留白。
+}
+
+.markdown-body li > ul,
+.markdown-body li > ol{
+    margin: 0.8em 0 0.8em !important; // 0.8em 0.8em 圆点列表块与上下数字列表项的留白。
     font-size: 1em;
-    color: var(--quote-text-color);
 }
 
 .markdown-body li p {
-    margin-bottom: 0.4em !important;
     line-height: 1.7 !important;
     margin-top: 0.4em !important;
-    margin-bottom: 0.6em !important;
+    margin-bottom: 0em !important;
 }
 
-.markdown-body li > :last-child {
+.markdown-body li > :last-child:not(blockquote):not(ol):not(ul) {
     margin-bottom: 0 !important;
 }
+
+.markdown-body li::marker {
+    color: var(--quote-text-color);
+}
+
 
 .markdown-body blockquote {
     font-size:1em;
@@ -130,7 +136,7 @@ body {
     color: var(--quote-text-color) !important;
     padding: 0.55rem 1rem !important;
     border-radius: 10px;
-    margin: 1.5em 0;
+    margin: 1rem 0;
 }
 
 .markdown-body code {
